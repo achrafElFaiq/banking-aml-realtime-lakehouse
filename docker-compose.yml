@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  # ─── MESSAGE BROKER ─────────────────────────────────────
+  # Redpanda = Kafka-compatible, single binary, no Zookeeper.
+  # Your CV says "Kafka" because the API is identical.
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.1.1
+    container_name: redpanda
+    command:
+      - redpanda start
+      - --smp 1
+      - --memory 512M
+      - --overprovisioned
+      - --kafka-addr internal://0.0.0.0:29092,external://0.0.0.0:9092
+      - --advertise-kafka-addr internal://redpanda:29092,external://localhost:9092
+    ports:
+      - "9092:9092"    # Kafka API — your producer/consumer connect here
+      - "8081:8081"    # Schema Registry (used later)
+      - "9644:9644"    # Admin API
+    volumes:
+      - redpanda_data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD", "rpk", "cluster", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Redpanda Console — web UI to inspect topics ───────
+  redpanda-console:
+    image: docker.redpanda.com/redpandadata/console:v2.6.0
+    container_name: redpanda-console
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_BROKERS: redpanda:29092
+    depends_on:
+      redpanda:
+        condition: service_healthy
+
+  # ─── DATABASE ───────────────────────────────────────────
+  # Postgres serves as:
+  #   - Bronze layer (raw transactions written by the consumer)
+  #   - Customer reference table (loaded from CSV)
+  #   - Alert store (real-time alerts from the speed layer)
+  #   - Warehouse for dbt to transform (Silver → Gold)
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: aml
+      POSTGRES_PASSWORD: aml_secret
+      POSTGRES_DB: aml_lakehouse
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./source_systems/init_db:/docker-entrypoint-initdb.d  # runs SQL on first start
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aml"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  redpanda_data:
+  postgres_data:
