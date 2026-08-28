@@ -33,5 +33,7 @@ CREATE TABLE IF NOT EXISTS prod_source.transactions (
     amount              VARCHAR(20) NOT NULL,
     currency            VARCHAR(3) NOT NULL,
     payment_channel     VARCHAR(20) NOT NULL,
+    status              VARCHAR(10) NOT NULL DEFAULT 'PENDING',
+    blocked_reason      VARCHAR(255),
     executed_at         TIMESTAMP NOT NULL
 );

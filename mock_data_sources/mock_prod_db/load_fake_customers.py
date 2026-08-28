@@ -2,7 +2,7 @@
 
 import psycopg2
 
-from source_systems.generators.customers import generate_customers
+from mock_data_sources.mock_prod_db.generate_fake_customers import generate_customers
 
 
 def load_customers(n: int = 500) -> None:

@@ -55,7 +55,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./source_systems/init_db:/docker-entrypoint-initdb.d  # runs SQL on first start
+      - ./mock_data_sources/mock_prod_db/init_db:/docker-entrypoint-initdb.d  # runs SQL on first start
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U aml"]
       interval: 5s
