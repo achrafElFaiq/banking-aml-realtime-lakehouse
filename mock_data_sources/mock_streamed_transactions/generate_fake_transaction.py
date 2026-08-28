@@ -8,7 +8,7 @@ from enum import Enum
 from faker import Faker
 from pydantic import BaseModel
 
-from generators.customers import Customer
+from mock_data_sources.mock_prod_db.generate_fake_customers import Customer
 
 fake = Faker("fr_FR")
 fake_foreign = Faker(["de_DE", "es_ES", "it_IT", "nl_NL"])
@@ -28,6 +28,14 @@ class PaymentChannel(str, Enum):
     CARD = "CARD"
 
 
+class TransactionStatus(str, Enum):
+    """Transaction lifecycle status."""
+
+    PENDING = "PENDING"
+    SETTLED = "SETTLED"
+    BLOCKED = "BLOCKED"
+
+
 class Transaction(BaseModel):
     """Schema for a banking transaction event."""
 
@@ -37,13 +45,13 @@ class Transaction(BaseModel):
     amount: str
     currency: str
     payment_channel: PaymentChannel
+    status: TransactionStatus = TransactionStatus.PENDING
+    blocked_reason: str | None = None
     executed_at: datetime
 
 
 def _generate_amount() -> str:
     """Generate a realistic EUR amount in European comma format."""
-    # Small transactions (coffee, lunch) are most common
-    # Large transfers (rent, savings) are rare
     roll = random.random()
     if roll < 0.60:
         amount = round(random.uniform(5, 150), 2)
@@ -54,7 +62,6 @@ def _generate_amount() -> str:
     else:
         amount = round(random.uniform(8000, 15000), 2)
 
-    # European format: comma as decimal separator
     return f"{amount:.2f}".replace(".", ",")
 
 
@@ -62,7 +69,6 @@ def generate_transaction(customers: list[Customer]) -> Transaction:
     """Generate one synthetic transaction referencing an existing customer."""
     sender = random.choice(customers)
 
-    # 30% cross-border, 70% domestic
     if random.random() < CROSS_BORDER_RATIO:
         beneficiary_iban = fake_foreign.iban()
     else:
@@ -84,7 +90,7 @@ def generate_transaction(customers: list[Customer]) -> Transaction:
 
 
 if __name__ == "__main__":
-    from generators.customers import generate_customers
+    from mock_data_sources.mock_prod_db.generate_fake_customers import generate_customers
 
     customer_pool = generate_customers(100)
     for _ in range(5):

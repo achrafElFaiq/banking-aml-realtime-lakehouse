@@ -7,7 +7,9 @@ requires-python = ">=3.13"
 dependencies = [
     "faker>=40.37.0",
     "kafka-python-ng>=2.2.3",
+    "pandas>=3.0.5",
     "psycopg2>=2.9.12",
+    "pyarrow>=25.0.1",
     "pydantic>=2.13.4",
 ]
 
