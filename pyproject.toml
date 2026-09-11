@@ -5,10 +5,12 @@ description = "End-to-end hybrid (Lambda) AML/LCB-FT data platform with streamin
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "dbt-core>=1.12.4",
+    "dbt-postgres>=1.11.0",
     "faker>=40.37.0",
     "kafka-python-ng>=2.2.3",
     "pandas>=3.0.5",
-    "psycopg2>=2.9.12",
+    "psycopg2-binary>=2.9.13",
     "pyarrow>=25.0.1",
     "pydantic>=2.13.4",
 ]
