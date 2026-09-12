@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    description: "Cleaned transactions from bronze"
+    columns:
+      - name: transaction_id
+        tests:
+          - unique
+          - not_null
+      - name: sender_iban
+        tests:
+          - not_null
+      - name: amount_eur
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['PENDING', 'SETTLED', 'BLOCKED']
+
+  - name: stg_customers
+    description: "Cleaned customers from bronze"
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+      - name: iban
+        tests:
+          - unique
+          - not_null
+      - name: risk_tier
+        tests:
+          - accepted_values:
+              values: ['LOW', 'MEDIUM', 'HIGH', 'PEP']

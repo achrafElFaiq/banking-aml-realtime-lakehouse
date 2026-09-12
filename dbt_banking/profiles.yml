@@ -1,0 +1,21 @@
+dbt_banking:
+  target: ci
+  outputs:
+    ci:
+      type: postgres
+      host: localhost
+      port: 5432
+      user: aml
+      password: aml_secret
+      dbname: aml_lakehouse
+      schema: gold
+      threads: 4
+    prod:
+      type: postgres
+      host: postgres
+      port: 5432
+      user: aml
+      password: aml_secret
+      dbname: aml_lakehouse
+      schema: gold
+      threads: 4

@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: fct_transactions
+    description: "Reconciled transactions with customer risk tier"
+    columns:
+      - name: transaction_id
+        description: "Unique transaction identifier"
+        tests:
+          - unique
+          - not_null
+      - name: amount_eur
+        description: "Transaction amount in EUR"
+        tests:
+          - not_null
+      - name: final_status
+        description: "Transaction lifecycle status"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['PENDING', 'SETTLED', 'BLOCKED']
+      - name: payment_channel
+        description: "Payment method used"
+        tests:
+          - accepted_values:
+              values: ['SEPA', 'INSTANT_SEPA', 'CARD']
+      - name: currency
+        description: "Transaction currency"
+        tests:
+          - accepted_values:
+              values: ['EUR']
+
+  - name: fct_daily_aml_alerts
+    description: "Flagged transactions exceeding ACPR cross-border threshold"
+    columns:
+      - name: transaction_id
+        tests:
+          - not_null
+      - name: rule_code
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['CUMULATIVE_CROSS_BORDER_10K']
+      - name: rolling_30d_cross_border_eur
+        description: "Must exceed 10000 to appear in this table"
+        tests:
+          - not_null

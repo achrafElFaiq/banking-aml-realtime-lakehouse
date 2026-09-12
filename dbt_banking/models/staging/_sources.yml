@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: prod_source
+    schema: prod_source
+    tables:
+      - name: customers
+      - name: transactions
+
+  - name: bronze
+    schema: bronze
+    tables:
+      - name: raw_settlements
