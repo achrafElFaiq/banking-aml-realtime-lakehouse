@@ -1,0 +1,94 @@
+[0m13:02:18.749321 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a381a90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10bfe3890>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10bfe3750>]}
+
+
+============================== 13:02:18.772536 | 1269f724-fbee-43c7-ae15-190f04a5c398 ==============================
+[0m13:02:18.772536 [info ] [MainThread]: Running with dbt=1.12.4
+[0m13:02:18.772929 [debug] [MainThread]: running dbt with arguments {'use_colors': 'True', 'indirect_selection': 'eager', 'profiles_dir': '/Users/achrafelfaiq/.dbt', 'partial_parse': 'True', 'printer_width': '80', 'version_check': 'True', 'no_print': 'None', 'log_format': 'default', 'warn_error': 'None', 'quiet': 'False', 'write_json': 'True', 'empty': 'None', 'static_parser': 'True', 'use_experimental_parser': 'False', 'target_path': 'None', 'debug': 'False', 'send_anonymous_usage_stats': 'True', 'cache_selected_only': 'False', 'log_path': 'logs', 'fail_fast': 'False', 'invocation_command': 'dbt init', 'hints_enabled': 'True', 'introspect': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_cache_events': 'False', 'maximum_seed_size_mib': '1'}
+[0m13:02:18.814109 [info ] [MainThread]: Creating dbt configuration folder at /Users/achrafelfaiq/.dbt
+[0m13:02:24.066842 [debug] [MainThread]: Starter project path: /Users/achrafelfaiq/Desktop/Projects/banking-aml-realtime-lakehouse/.venv/lib/python3.13/site-packages/dbt/include/starter_project
+[0m13:02:24.073165 [info ] [MainThread]: Setting up your profile.
+[0m13:03:12.863363 [info ] [MainThread]: Profile dbt_banking written to /Users/achrafelfaiq/.dbt/profiles.yml using target's profile_template.yml and your supplied values.
+[0m13:03:12.871763 [info ] [MainThread]: Running dbt debug to validate the project...
+[0m13:03:12.872520 [info ] [MainThread]: dbt version: 1.12.4
+[0m13:03:12.872779 [info ] [MainThread]: python version: 3.13.6
+[0m13:03:12.872982 [info ] [MainThread]: python path: /Users/achrafelfaiq/Desktop/Projects/banking-aml-realtime-lakehouse/.venv/bin/python3
+[0m13:03:12.873191 [info ] [MainThread]: os info: macOS-26.5-arm64-arm-64bit-Mach-O
+[0m13:03:12.890363 [info ] [MainThread]: Using profiles dir at /Users/achrafelfaiq/.dbt
+[0m13:03:12.890634 [info ] [MainThread]: Using profiles.yml file at /Users/achrafelfaiq/.dbt/profiles.yml
+[0m13:03:12.890788 [info ] [MainThread]: Using dbt_project.yml file at /Users/achrafelfaiq/Desktop/Projects/banking-aml-realtime-lakehouse/dbt_banking/dbt_project.yml
+[0m13:03:12.891597 [info ] [MainThread]: adapter type: postgres
+[0m13:03:12.891811 [info ] [MainThread]: adapter version: 1.11.0
+[0m13:03:12.952105 [info ] [MainThread]: Configuration:
+[0m13:03:12.952393 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m13:03:12.952542 [info ] [MainThread]:   dbt_project.yml file [[32mOK found and valid[0m]
+[0m13:03:12.952680 [info ] [MainThread]: Required dependencies:
+[0m13:03:12.952926 [debug] [MainThread]: Executing "git --help"
+[0m13:03:12.966437 [debug] [MainThread]: STDOUT: "b"usage: git [-v | --version] [-h | --help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--no-lazy-fetch]\n           [--no-optional-locks] [--no-advice] [--bare] [--git-dir=<path>]\n           [--work-tree=<path>] [--namespace=<name>] [--config-env=<name>=<envvar>]\n           <command> [<args>]\n\nThese are common Git commands used in various situations:\n\nstart a working area (see also: git help tutorial)\n   clone      Clone a repository into a new directory\n   init       Create an empty Git repository or reinitialize an existing one\n\nwork on the current change (see also: git help everyday)\n   add        Add file contents to the index\n   mv         Move or rename a file, a directory, or a symlink\n   restore    Restore working tree files\n   rm         Remove files from the working tree and from the index\n\nexamine the history and state (see also: git help revisions)\n   bisect     Use binary search to find the commit that introduced a bug\n   diff       Show changes between commits, commit and working tree, etc\n   grep       Print lines matching a pattern\n   log        Show commit logs\n   show       Show various types of objects\n   status     Show the working tree status\n\ngrow, mark and tweak your common history\n   backfill   Download missing objects in a partial clone\n   branch     List, create, or delete branches\n   commit     Record changes to the repository\n   merge      Join two or more development histories together\n   rebase     Reapply commits on top of another base tip\n   reset      Reset current HEAD to the specified state\n   switch     Switch branches\n   tag        Create, list, delete or verify a tag object signed with GPG\n\ncollaborate (see also: git help workflows)\n   fetch      Download objects and refs from another repository\n   pull       Fetch from and integrate with another repository or a local branch\n   push       Update remote refs along with associated objects\n\n'git help -a' and 'git help -g' list available subcommands and some\nconcept guides. See 'git help <command>' or 'git help <concept>'\nto read about a specific subcommand or concept.\nSee 'git help git' for an overview of the system.\n""
+[0m13:03:12.966976 [debug] [MainThread]: STDERR: "b''"
+[0m13:03:12.967158 [info ] [MainThread]:  - git [[32mOK found[0m]
+
+[0m13:03:12.967322 [info ] [MainThread]: Connection:
+[0m13:03:12.967501 [info ] [MainThread]:   host: localhost
+[0m13:03:12.967696 [info ] [MainThread]:   port: 5432
+[0m13:03:12.967814 [info ] [MainThread]:   user: aml
+[0m13:03:12.967947 [info ] [MainThread]:   database: aml_lakehouse
+[0m13:03:12.968061 [info ] [MainThread]:   schema: gold
+[0m13:03:12.968179 [info ] [MainThread]:   connect_timeout: 10
+[0m13:03:12.968299 [info ] [MainThread]:   role: None
+[0m13:03:12.968411 [info ] [MainThread]:   search_path: None
+[0m13:03:12.968527 [info ] [MainThread]:   keepalives_idle: 0
+[0m13:03:12.968641 [info ] [MainThread]:   sslmode: None
+[0m13:03:12.968753 [info ] [MainThread]:   sslcert: None
+[0m13:03:12.968866 [info ] [MainThread]:   sslkey: None
+[0m13:03:12.968982 [info ] [MainThread]:   sslrootcert: None
+[0m13:03:12.969099 [info ] [MainThread]:   application_name: dbt
+[0m13:03:12.969212 [info ] [MainThread]:   autocommit: False
+[0m13:03:12.969324 [info ] [MainThread]:   retries: 1
+[0m13:03:12.969724 [info ] [MainThread]: Registered adapter: postgres=1.11.0
+[0m13:03:13.032922 [debug] [MainThread]: Acquiring new postgres connection 'debug'
+[0m13:03:13.083914 [debug] [MainThread]: Using postgres connection "debug"
+[0m13:03:13.084166 [debug] [MainThread]: On debug: select 1 as id
+[0m13:03:13.084326 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m13:03:13.121978 [debug] [MainThread]: SQL status: SELECT 1 in 0.038 seconds
+[0m13:03:13.122691 [debug] [MainThread]: On debug: Close
+[0m13:03:13.122896 [info ] [MainThread]:   Connection test: [[32mOK connection ok[0m]
+
+[0m13:03:13.123078 [info ] [MainThread]: [32mAll checks passed![0m
+[0m13:03:13.123323 [info ] [MainThread]: Your new dbt project "dbt_banking" was created!
+Initialized new project in /Users/achrafelfaiq/Desktop/Projects/banking-aml-realtime-lakehouse/dbt_banking/dbt_banking
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m13:03:13.126991 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 54.436924, "process_in_blocks": "0", "process_kernel_time": 0.592403, "process_mem_max_rss": "160514048", "process_out_blocks": "0", "process_user_time": 2.269474}
+[0m13:03:13.127338 [debug] [MainThread]: Command `dbt init` succeeded at 13:03:13.127270 after 54.44 seconds
+[0m13:03:13.127521 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m13:03:13.127721 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10bb816e0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b731eb0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10bbd7130>]}
+[0m13:03:13.127969 [debug] [MainThread]: Flushing usage events
+[0m13:03:13.532134 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m13:31:05.355158 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108c15be0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a21b4d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a21b750>]}
+
+
+============================== 13:31:05.358935 | 16953d2a-69f3-4473-a01b-24fc28e604e0 ==============================
+[0m13:31:05.358935 [info ] [MainThread]: Running with dbt=1.12.4
+[0m13:31:05.359339 [debug] [MainThread]: running dbt with arguments {'log_cache_events': 'False', 'printer_width': '80', 'quiet': 'False', 'indirect_selection': 'eager', 'invocation_command': 'dbt run', 'debug': 'False', 'cache_selected_only': 'False', 'static_parser': 'True', 'hints_enabled': 'True', 'warn_error': 'None', 'fail_fast': 'False', 'target_path': 'None', 'introspect': 'True', 'no_print': 'None', 'partial_parse': 'True', 'empty': 'False', 'version_check': 'True', 'profiles_dir': '/Users/achrafelfaiq/.dbt', 'maximum_seed_size_mib': '1', 'write_json': 'True', 'use_colors': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'use_experimental_parser': 'False', 'log_path': 'logs', 'log_format': 'default', 'send_anonymous_usage_stats': 'True'}
+[0m13:31:05.359909 [error] [MainThread]: [[31mERROR[0m]: Encountered an error:
+Runtime Error
+  No dbt_project.yml found at expected path /Users/achrafelfaiq/Desktop/Projects/banking-aml-realtime-lakehouse/dbt_project.yml
+  Verify that each entry within packages.yml (and their transitive dependencies) contains a file named dbt_project.yml
+  
+[0m13:31:05.362166 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": false, "command_wall_clock_time": 0.066096164, "process_in_blocks": "0", "process_kernel_time": 0.162134, "process_mem_max_rss": "119914496", "process_out_blocks": "0", "process_user_time": 0.862964}
+[0m13:31:05.362492 [debug] [MainThread]: Command `dbt run` failed at 13:31:05.362430 after 0.07 seconds
+[0m13:31:05.362701 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a27c9d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a1db770>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a288e20>]}
+[0m13:31:05.362884 [debug] [MainThread]: Flushing usage events
+[0m13:31:05.772704 [debug] [MainThread]: An error was encountered while trying to flush usage events

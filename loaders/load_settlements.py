@@ -5,12 +5,11 @@ from pathlib import Path
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
+import os
 
-
-def create_db_connection() -> psycopg2.extensions.connection:
-    """Connect to the mock prod database."""
+def create_db_connection():
     return psycopg2.connect(
-        host="localhost",
+        host=os.getenv("POSTGRES_HOST", "localhost"),
         port=5432,
         dbname="aml_lakehouse",
         user="aml",
