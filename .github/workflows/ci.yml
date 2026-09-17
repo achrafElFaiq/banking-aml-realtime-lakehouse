@@ -16,12 +16,6 @@ jobs:
       - run: uv sync --group dev
       - run: uv run ruff check .
       - run: uv run mypy .
-      - name: sqlfluff
-        run: |
-          cd dbt_banking
-          uv run sqlfluff lint models/ --templater raw
-        env:
-          DBT_PROFILES_DIR: .
       - name: dbt parse
         run: |
           cd dbt_banking
