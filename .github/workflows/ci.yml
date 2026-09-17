@@ -19,9 +19,13 @@ jobs:
       - name: sqlfluff
         run: |
           cd dbt_banking
+          uv run dbt deps
           uv run sqlfluff lint models/
         env:
           DBT_PROFILES_DIR: .
+          SNOWFLAKE_ACCOUNT: dummy
+          SNOWFLAKE_USER: dummy
+          SNOWFLAKE_PASSWORD: dummy
       - name: dbt parse
         run: |
           cd dbt_banking
