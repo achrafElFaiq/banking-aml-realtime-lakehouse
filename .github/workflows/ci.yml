@@ -16,10 +16,17 @@ jobs:
       - run: uv sync --group dev
       - run: uv run ruff check .
       - run: uv run mypy .
+      - name: sqlfluff
+        run: |
+          cd dbt_banking
+          uv run sqlfluff lint models/ --templater raw
       - name: dbt parse
         run: |
           cd dbt_banking
           uv run dbt deps
-          uv run dbt parse
+          uv run dbt parse --target ci
         env:
           DBT_PROFILES_DIR: .
+          SNOWFLAKE_ACCOUNT: dummy
+          SNOWFLAKE_USER: dummy
+          SNOWFLAKE_PASSWORD: dummy

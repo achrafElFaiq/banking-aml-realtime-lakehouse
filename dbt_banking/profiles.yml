@@ -9,15 +9,15 @@ dbt_banking:
       role: SYSADMIN
       warehouse: AML_WH
       database: AML_LAKEHOUSE
-      schema: GOLD
+      schema: STAGING
       threads: 4
     ci:
       type: snowflake
       account: dummy
       user: dummy
       password: dummy
-      role: SYSADMIN
-      warehouse: AML_WH
-      database: AML_LAKEHOUSE
-      schema: GOLD
+      role: dummy
+      warehouse: dummy
+      database: dummy
+      schema: dummy
       threads: 1
