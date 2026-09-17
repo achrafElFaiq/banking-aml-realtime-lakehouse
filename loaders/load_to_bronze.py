@@ -57,7 +57,10 @@ def load_table(
         overwrite=True,
     )
 
-    print(f"✅ {num_rows} rows loaded: prod_source.{source_table} -> BRONZE.{target_table.upper()}")
+    print(
+        f"✅ {num_rows} rows loaded: prod_source.{source_table}"
+        f" -> BRONZE.{target_table.upper()}"
+    )
 
 
 def load_bronze() -> None:
