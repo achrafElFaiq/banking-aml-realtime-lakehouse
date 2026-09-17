@@ -1,7 +1,9 @@
 """Producer: simulates a payment gateway that writes to the prod DB and emits to Redpanda."""
 
 import json
+import os
 import time
+from typing import Any
 
 import psycopg2
 from kafka import KafkaProducer
@@ -11,11 +13,12 @@ from mock_data_sources.mock_streamed_transactions.generate_fake_transaction impo
     generate_transaction,
 )
 
+host=os.getenv("POSTGRES_HOST", "localhost")
 
 def create_kafka_producer() -> KafkaProducer:
     """Create a Kafka producer connected to Redpanda."""
     return KafkaProducer(
-        bootstrap_servers=["localhost:9092"],
+        bootstrap_servers=[os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")],
         value_serializer=lambda v: json.dumps(v, default=str).encode("utf-8"),
     )
 
@@ -23,7 +26,7 @@ def create_kafka_producer() -> KafkaProducer:
 def create_db_connection() -> psycopg2.extensions.connection:
     """Connect to the mock prod database."""
     return psycopg2.connect(
-        host="localhost",
+        host=host,
         port=5432,
         dbname="aml_lakehouse",
         user="aml",
@@ -49,7 +52,7 @@ def load_customers_from_db(conn: psycopg2.extensions.connection) -> list[Custome
     return [Customer(**dict(zip(columns, row))) for row in rows]
 
 
-def write_to_db(conn: psycopg2.extensions.connection, txn: dict) -> None:
+def write_to_db(conn: psycopg2.extensions.connection, txn: dict[str, Any]) -> None:
     """Write a transaction to prod_source.transactions."""
     cur = conn.cursor()
     cur.execute(
@@ -88,19 +91,24 @@ if __name__ == "__main__":
     try:
         count = 0
         while True:
-            txn = generate_transaction(customers)
-            txn_dict = txn.model_dump(mode="json")
+            transactions = generate_transaction(customers)
+            for txn in transactions:
+                txn_dict = txn.model_dump(mode="json")
+                write_to_db(conn, txn_dict)
+                producer.send("transactions", value=txn_dict)
+                count += 1
 
-            # Simultaneous: write to DB + push to Redpanda
-            write_to_db(conn, txn_dict)
-            producer.send("transactions", value=txn_dict)
+                if len(transactions) > 1:
+                    print(
+                        f"🚨 [{count}] BURST | {txn.payment_channel.value} | "
+                        f"{txn.amount} EUR | {txn.sender_iban[:10]}..."
+                    )
+                else:
+                    print(
+                        f"   [{count}] {txn.payment_channel.value} | "
+                        f"{txn.amount} EUR | {txn.sender_iban[:10]}..."
+                    )
 
-            count += 1
-            print(
-                f"[{count}] {txn.payment_channel.value} | "
-                f"{txn.amount} EUR | {txn.sender_iban[:8]}... | "
-                f"DB ✓ | Redpanda ✓"
-            )
             time.sleep(1)
     except KeyboardInterrupt:
         print(f"\n⏹ Stopped after {count} transactions")

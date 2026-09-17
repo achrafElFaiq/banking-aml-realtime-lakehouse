@@ -4,11 +4,12 @@ SELECT
     last_name,
     email,
     phone_number,
-    iban,
+    {{ pseudonymize_iban('iban') }} AS iban_hmac,
+    {{ truncate_iban('iban') }} AS iban_truncated,
     address,
     city,
     country,
     risk_tier,
     created_at,
     ingested_at
-FROM {{ ref('raw_customers') }}
+FROM {{ source('bronze', 'raw_customers') }}

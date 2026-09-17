@@ -1,7 +1,9 @@
 SELECT
     transaction_id,
-    sender_iban,
-    beneficiary_iban,
+    {{ pseudonymize_iban('sender_iban') }} AS sender_iban_hmac,
+    {{ truncate_iban('sender_iban') }} AS sender_iban_truncated,
+    {{ pseudonymize_iban('beneficiary_iban') }} AS beneficiary_iban_hmac,
+    {{ truncate_iban('beneficiary_iban') }} AS beneficiary_iban_truncated,
     CAST(
         REPLACE(REPLACE(amount, '.', ''), ',', '.') AS DECIMAL(18, 2)
     ) AS amount_eur,

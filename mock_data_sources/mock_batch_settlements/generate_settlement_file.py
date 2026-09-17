@@ -5,6 +5,7 @@ confirming which transactions actually cleared. Reads PENDING transactions
 from 1-3 days ago, marks them SETTLED, and writes a Parquet file.
 """
 
+import os
 import random
 from datetime import date, timedelta
 from pathlib import Path
@@ -16,7 +17,7 @@ import psycopg2
 def create_db_connection() -> psycopg2.extensions.connection:
     """Connect to the mock prod database."""
     return psycopg2.connect(
-        host="localhost",
+        host=os.getenv("POSTGRES_HOST", "localhost"),
         port=5432,
         dbname="aml_lakehouse",
         user="aml",
@@ -43,16 +44,16 @@ def fetch_pending_transactions(
 
 
 def apply_settlement_corrections(df: pd.DataFrame) -> pd.DataFrame:
-    """Simulate clearing corrections — small amount adjustments on ~5% of rows."""
+    """Simulate clearing corrections -- small amount adjustments on ~5% of rows."""
     df = df.copy()
     df["status"] = "SETTLED"
 
     # 5% of transactions get a small amount correction (FX, fees, tips)
-    mask = df.sample(frac=0.05, random_state=42).index if len(df) > 20 else []
+    mask: pd.Index = df.sample(frac=0.05, random_state=42).index if len(df) > 20 else pd.Index([])
     for idx in mask:
         original = df.at[idx, "amount"]
         # Parse European format, add small correction, convert back
-        amount = float(original.replace(",", "."))
+        amount = float(str(original).replace(",", "."))
         correction = round(random.uniform(0.50, 5.00), 2)
         corrected = round(amount + correction, 2)
         df.at[idx, "amount"] = f"{corrected:.2f}".replace(".", ",")

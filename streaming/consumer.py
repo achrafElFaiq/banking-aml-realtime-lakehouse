@@ -5,14 +5,18 @@ This is Layer 2 (Real-time detection) of the Lambda architecture.
 """
 
 import json
+import os
 from collections import defaultdict
 from datetime import datetime, timedelta
+from typing import Any
 
 import psycopg2
 from kafka import KafkaConsumer
 
+host=os.getenv("POSTGRES_HOST", "localhost")
+
 # Rule configuration — in a production system this lives in rules.yaml
-VELOCITY_RULE = {
+VELOCITY_RULE: dict[str, Any] = {
     "name": "VELOCITY_RULE",
     "description": "5+ INSTANT_SEPA in 60 min for HIGH/PEP customer",
     "max_transactions": 5,
@@ -26,7 +30,7 @@ def create_consumer() -> KafkaConsumer:
     """Create a Kafka consumer connected to Redpanda."""
     return KafkaConsumer(
         "transactions",
-        bootstrap_servers=["localhost:9092"],
+        bootstrap_servers=[os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")],
         group_id="aml-velocity-checker",
         auto_offset_reset="earliest",
         value_deserializer=lambda v: json.loads(v.decode("utf-8")),
@@ -36,7 +40,7 @@ def create_consumer() -> KafkaConsumer:
 def create_db_connection() -> psycopg2.extensions.connection:
     """Connect to the mock prod database."""
     return psycopg2.connect(
-        host="localhost",
+        host=host,
         port=5432,
         dbname="aml_lakehouse",
         user="aml",
@@ -45,7 +49,7 @@ def create_db_connection() -> psycopg2.extensions.connection:
 
 
 def load_customer_risk_tiers(conn: psycopg2.extensions.connection) -> dict[str, str]:
-    """Load IBAN → risk_tier mapping from the database."""
+    """Load IBAN -> risk_tier mapping from the database."""
     cur = conn.cursor()
     cur.execute("SELECT iban, risk_tier FROM prod_source.customers")
     return {row[0]: row[1] for row in cur.fetchall()}
@@ -70,7 +74,7 @@ def block_transaction(
 
 
 def check_velocity_rule(
-    txn: dict,
+    txn: dict[str, Any],
     risk_tiers: dict[str, str],
     window: dict[str, list[datetime]],
 ) -> str | None:

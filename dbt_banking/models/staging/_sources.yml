@@ -1,13 +1,10 @@
 version: 2
 
 sources:
-  - name: prod_source
-    schema: prod_source
-    tables:
-      - name: customers
-      - name: transactions
-
   - name: bronze
-    schema: bronze
+    database: AML_LAKEHOUSE
+    schema: BRONZE
     tables:
+      - name: raw_customers
+      - name: raw_transactions
       - name: raw_settlements

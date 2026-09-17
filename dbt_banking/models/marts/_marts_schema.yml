@@ -45,3 +45,5 @@ models:
         description: "Must exceed 10000 to appear in this table"
         tests:
           - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 10000

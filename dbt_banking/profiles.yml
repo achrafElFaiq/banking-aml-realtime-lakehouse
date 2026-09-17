@@ -1,21 +1,23 @@
 dbt_banking:
-  target: ci
+  target: dev
   outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: SYSADMIN
+      warehouse: AML_WH
+      database: AML_LAKEHOUSE
+      schema: GOLD
+      threads: 4
     ci:
-      type: postgres
-      host: localhost
-      port: 5432
-      user: aml
-      password: aml_secret
-      dbname: aml_lakehouse
-      schema: gold
-      threads: 4
-    prod:
-      type: postgres
-      host: postgres
-      port: 5432
-      user: aml
-      password: aml_secret
-      dbname: aml_lakehouse
-      schema: gold
-      threads: 4
+      type: snowflake
+      account: dummy
+      user: dummy
+      password: dummy
+      role: SYSADMIN
+      warehouse: AML_WH
+      database: AML_LAKEHOUSE
+      schema: GOLD
+      threads: 1

@@ -1,16 +1,19 @@
 """Populate the mock production database with synthetic customers."""
 
+import os
+
 import psycopg2
 
 from mock_data_sources.mock_prod_db.generate_fake_customers import generate_customers
 
+host=os.getenv("POSTGRES_HOST", "localhost")
 
 def load_customers(n: int = 500) -> None:
     """Generate n customers and insert into prod_source.customers."""
     customers = generate_customers(n)
 
     conn = psycopg2.connect(
-        host="localhost",
+        host=host,
         port=5432,
         dbname="aml_lakehouse",
         user="aml",
@@ -26,7 +29,7 @@ def load_customers(n: int = 500) -> None:
                     (customer_id, first_name, last_name, email, phone_number,
                      iban, address, city, country, risk_tier, created_at)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (customer_id) DO NOTHING
+                ON CONFLICT DO NOTHING
                 """,
                 (
                     c.customer_id,

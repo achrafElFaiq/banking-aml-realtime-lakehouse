@@ -8,12 +8,16 @@ models:
         tests:
           - unique
           - not_null
-      - name: sender_iban
+      - name: sender_iban_hmac
         tests:
           - not_null
+          - dbt_expectations.expect_column_value_lengths_to_equal:
+              value: 64
       - name: amount_eur
         tests:
           - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
       - name: status
         tests:
           - accepted_values:
@@ -21,12 +25,15 @@ models:
 
   - name: stg_customers
     description: "Cleaned customers from bronze"
+    tests:
+      - dbt_expectations.expect_table_row_count_to_be_between:
+          min_value: 1
     columns:
       - name: customer_id
         tests:
           - unique
           - not_null
-      - name: iban
+      - name: iban_hmac
         tests:
           - unique
           - not_null

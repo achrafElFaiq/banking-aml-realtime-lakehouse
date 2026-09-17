@@ -7,19 +7,26 @@ requires-python = ">=3.13"
 dependencies = [
     "dbt-core>=1.12.4",
     "dbt-postgres>=1.11.0",
+    "dbt-snowflake>=1.12.0",
     "faker>=40.37.0",
     "kafka-python-ng>=2.2.3",
     "pandas>=3.0.5",
     "psycopg2-binary>=2.9.13",
     "pyarrow>=25.0.1",
     "pydantic>=2.13.4",
+    "python-dotenv>=1.2.3",
+    "snowflake-connector-python>=4.7.3",
 ]
 
 [dependency-groups]
 dev = [
     "mypy>=2.3.1",
+    "pandas-stubs>=3.0.5.260914",
     "pytest>=9.1.1",
     "ruff>=0.16.4",
+    "sqlfluff>=4.3.0",
+    "sqlfluff-templater-dbt>=4.3.0",
+    "types-psycopg2>=2.9.21.20260911",
 ]
 
 
@@ -34,3 +41,7 @@ select = ["E", "F", "I"]
 
 [tool.mypy]
 strict = true
+
+[[tool.mypy.overrides]]
+module = ["kafka.*", "airflow.*", "snowflake.*"]
+ignore_missing_imports = true

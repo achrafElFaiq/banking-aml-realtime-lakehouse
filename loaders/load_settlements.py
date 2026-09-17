@@ -1,70 +1,51 @@
-"""Load settlement Parquet files into bronze.raw_settlements in Postgres."""
+"""Load settlement Parquet files into Snowflake Bronze."""
 
+import os
 from pathlib import Path
 
 import pandas as pd
-import psycopg2
-from psycopg2.extras import execute_values
-import os
+import snowflake.connector
+from dotenv import load_dotenv
+from snowflake.connector.pandas_tools import write_pandas
 
-def create_db_connection():
-    return psycopg2.connect(
-        host=os.getenv("POSTGRES_HOST", "localhost"),
-        port=5432,
-        dbname="aml_lakehouse",
-        user="aml",
-        password="aml_secret",
+load_dotenv()
+
+
+def get_snowflake_conn() -> snowflake.connector.SnowflakeConnection:
+    return snowflake.connector.connect(
+        account=os.getenv("SNOWFLAKE_ACCOUNT", "rmuinzc-nm01875"),
+        user=os.getenv("SNOWFLAKE_USER", "achrafelfaiq"),
+        password=os.getenv("SNOWFLAKE_PASSWORD"),
+        warehouse="AML_WH",
+        database="AML_LAKEHOUSE",
+        schema="BRONZE",
     )
 
 
 def load_settlement_file(file_path: Path) -> None:
-    """Load a single settlement Parquet file into bronze.raw_settlements."""
     df = pd.read_parquet(file_path)
 
     if df.empty:
         print(f"⚠️  Empty file: {file_path}")
         return
 
-    conn = create_db_connection()
+    df["loaded_at"] = pd.Timestamp.now()
+    df.columns = [col.upper() for col in df.columns]
+    conn = get_snowflake_conn()
     try:
-        cur = conn.cursor()
-
-        cur.execute("CREATE SCHEMA IF NOT EXISTS bronze")
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS bronze.raw_settlements (
-                transaction_id      VARCHAR(36),
-                sender_iban         VARCHAR(34),
-                beneficiary_iban    VARCHAR(34),
-                amount              VARCHAR(20),
-                currency            VARCHAR(3),
-                payment_channel     VARCHAR(20),
-                status              VARCHAR(10),
-                blocked_reason      VARCHAR(255),
-                executed_at         TIMESTAMP,
-                loaded_at           TIMESTAMP DEFAULT NOW()
-            )
-        """)
-
-        rows = [tuple(row) for row in df.values]
-        execute_values(
-            cur,
-            """
-            INSERT INTO bronze.raw_settlements
-                (transaction_id, sender_iban, beneficiary_iban, amount,
-                 currency, payment_channel, status, blocked_reason, executed_at)
-            VALUES %s
-            """,
-            rows,
+        success, num_chunks, num_rows, _ = write_pandas(
+            conn,
+            df,
+            "RAW_SETTLEMENTS",
+            auto_create_table=True,
+            overwrite=True,
         )
-
-        conn.commit()
-        print(f"✅ Loaded {len(df)} rows from {file_path.name}")
+        print(f"✅ {num_rows} rows loaded from {file_path.name}")
     finally:
         conn.close()
 
 
 def load_all_settlements(directory: str = "data/settlements") -> None:
-    """Load all Parquet files from the settlements directory."""
     settlement_dir = Path(directory)
     if not settlement_dir.exists():
         print("⚠️  No settlements directory found")

@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-validate:
+    name: Lint & Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync --group dev
+      - run: uv run ruff check .
+      - run: uv run mypy .
+      - name: sqlfluff
+        run: |
+          cd dbt_banking
+          uv run sqlfluff lint models/
+        env:
+          DBT_PROFILES_DIR: .
+      - name: dbt parse
+        run: |
+          cd dbt_banking
+          uv run dbt deps
+          uv run dbt parse
+        env:
+          DBT_PROFILES_DIR: .

@@ -1,7 +1,9 @@
 SELECT
     t.transaction_id,
-    t.sender_iban,
-    t.beneficiary_iban,
+    t.sender_iban_hmac,
+    t.sender_iban_truncated,
+    t.beneficiary_iban_hmac,
+    t.beneficiary_iban_truncated,
     t.amount_eur,
     t.currency,
     t.payment_channel,
@@ -13,6 +15,6 @@ SELECT
     t.seen_in_settlement,
     c.customer_id,
     c.risk_tier
-FROM {{ ref('int_reconciled_transactions') }} t
-LEFT JOIN {{ ref('stg_customers') }} c
-    ON t.sender_iban = c.iban
+FROM {{ ref('int_reconciled_transactions') }} AS t
+LEFT JOIN {{ ref('stg_customers') }} AS c
+    ON t.sender_iban_hmac = c.iban_hmac
